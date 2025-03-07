@@ -6,6 +6,7 @@ Color zelow = Color(0xff24D980);
 Color verif = Color(0xffE64646);
 Color white = Color(0xffffffff);
 Color grey = Color(0xB3000000);
+Color box = Color(0xffEFEFEF);
 
 
 

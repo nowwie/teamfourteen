@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:team_fourteen/ui/auth/constans.dart';
+import 'package:team_fourteen/ui/auth/login_form.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key}); // Tambahkan super.key
@@ -54,7 +55,11 @@ class LoginScreen extends StatelessWidget {
                   side: BorderSide(color: zelow, width: 2),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, 
+                  MaterialPageRoute(builder: (context)=> const LoginCustomerScreen()),
+                  );
+                },
                 child: Text('Customer', style: greenTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),),
               ),
             )
