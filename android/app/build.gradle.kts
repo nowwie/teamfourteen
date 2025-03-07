@@ -45,3 +45,8 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    classpath 'dev.flutter.plugins:plugin-loader:1.0.0'
+}
+
