@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:team_fourteen/ui/auth/constans.dart';
+import 'package:team_fourteen/ui/auth/forgotpw.dart';
 import 'package:team_fourteen/ui/auth/register_form.dart';
 
 class LoginForm extends StatelessWidget {
@@ -59,7 +60,8 @@ class LoginForm extends StatelessWidget {
                 SizedBox(height: 12),
                 TextButton(
                   onPressed: () {
-                    print("Forgot password clicked");
+                    Navigator.push(context,
+                     MaterialPageRoute(builder: (context)=> const ForgotPassword()));
                   },
                   child: Text('Forgot password?',
                       style: greenTextStyle.copyWith(fontSize: 12, fontWeight: FontWeight.w600)),

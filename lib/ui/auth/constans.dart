@@ -28,5 +28,8 @@ TextStyle verifTextStyle = GoogleFonts.inter(
 TextStyle codeTextStyle = GoogleFonts.inter(
   color: black, 
 );
+TextStyle abuInter = GoogleFonts.inter(
+  color: grey,
+);
 
 
