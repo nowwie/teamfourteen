@@ -40,25 +40,28 @@ class _RegisterFormState extends State<RegisterForm> {
             // Menampilkan container NPWP hanya jika role adalah Admin
             if (_selectedRole == 'Merchant') _buildNpwpField(),
             SizedBox(height: 134,),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 153, vertical: 11),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: zelow,
-                  minimumSize: Size(328, 48),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                onPressed: () {
-                  print('Sign in clicked');
-                  Navigator.push(context,
-                   MaterialPageRoute(builder: (context) => const Verification(),));
-                },
-                child: Text(
-                  'Sign Up',
-                  style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
+            SizedBox(
+            width: MediaQuery.of(context).size.width * 0.85, // 85% dari lebar layar
+            child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+            backgroundColor: zelow,
+            minimumSize: const Size(double.infinity, 48), // Lebar penuh dalam SizedBox
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             ),
+            onPressed: () {
+            print('Sign in clicked');
+            Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Verification()),
+            );
+           },
+             child: Text(
+             'Sign Up',
+             style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+             ),
+          ),
+         ),
+
             SizedBox(height: 4,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

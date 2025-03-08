@@ -26,7 +26,7 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 100),
             // Pindahkan Container ke sini
             Container(
-              width: 329,
+              width: double.infinity,
               height: 44,
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(
@@ -43,7 +43,7 @@ class LoginScreen extends StatelessWidget {
             ),
             SizedBox(height: 12,),
             Container(
-              width: 329,
+              width: double.infinity,
               height: 44,
               margin: EdgeInsets.symmetric(horizontal: 20),
               child: ElevatedButton(

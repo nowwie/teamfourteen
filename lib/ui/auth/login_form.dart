@@ -71,23 +71,24 @@ class LoginForm extends StatelessWidget {
             SizedBox(height: 116),
             
             // Login Button
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 153, vertical: 11),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: zelow,
-                  minimumSize: Size(328, 48),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-                ),
-                onPressed: () {
-                  print('Login clicked');
-                },
-                child: Text(
-                  'Login',
-                  style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
+            SizedBox(
+            width: MediaQuery.of(context).size.width * 0.85, // 85% dari lebar layar
+            child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+            backgroundColor: zelow,
+            minimumSize: const Size(double.infinity, 48), // Lebar penuh dalam SizedBox
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+             ),
+            onPressed: () {
+            print('Login clicked');
+            },
+            child: Text(
+            'Login',
+            style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+               ),
+             ),
             ),
+
             SizedBox(height: 9),
             
             // Divider and Login with Text
