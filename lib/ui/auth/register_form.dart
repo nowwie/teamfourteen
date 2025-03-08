@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:team_fourteen/ui/auth/constans.dart';
 import 'package:team_fourteen/ui/auth/login_form.dart';
+import 'package:team_fourteen/ui/auth/verification.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -49,6 +50,8 @@ class _RegisterFormState extends State<RegisterForm> {
                 ),
                 onPressed: () {
                   print('Sign in clicked');
+                  Navigator.push(context,
+                   MaterialPageRoute(builder: (context) => const Verification(),));
                 },
                 child: Text(
                   'Sign Up',

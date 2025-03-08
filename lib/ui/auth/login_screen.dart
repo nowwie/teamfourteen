@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:team_fourteen/ui/auth/constans.dart';
 import 'package:team_fourteen/ui/auth/login_form.dart';
+import 'package:team_fourteen/ui/auth/register_form.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key}); // Tambahkan super.key
@@ -21,14 +22,7 @@ class LoginScreen extends StatelessWidget {
               style: greyTextStyle.copyWith(fontSize: 17, fontWeight: FontWeight.normal),
             ),
             SizedBox(height: 100),
-            Text(
-              'Slogan',
-              style: blackTextStyle.copyWith(fontSize: 32, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'deskripsi',
-              style: greyTextStyle.copyWith(fontSize: 17, fontWeight: FontWeight.normal),
-            ),
+           Image.asset('assets/images/zelowbottom.png', width: 132, height: 162.26),
             SizedBox(height: 100),
             // Pindahkan Container ke sini
             Container(
@@ -40,8 +34,11 @@ class LoginScreen extends StatelessWidget {
                   backgroundColor: zelow,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))
                 ),
-                onPressed: () {},
-                child: Text('Small/Medium Enterprise', style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),),
+                onPressed: () {
+                  Navigator.push(context,
+                   MaterialPageRoute(builder: (context) => const LoginForm(),));
+                },
+                child: Text('Log In', style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),),
               ),
             ),
             SizedBox(height: 12,),
@@ -57,10 +54,10 @@ class LoginScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.push(context, 
-                  MaterialPageRoute(builder: (context)=> const LoginForm()),
+                  MaterialPageRoute(builder: (context)=> const RegisterForm()),
                   );
                 },
-                child: Text('Customer', style: greenTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),),
+                child: Text('Sign Up', style: greenTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),),
               ),
             )
           ],

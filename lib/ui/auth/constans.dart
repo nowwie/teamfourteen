@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 Color black = Color(0xff000000);
 Color zelow = Color(0xff24D980);
-Color verif = Color(0xffE64646);
+Color verif = Color(0xffF54135);
 Color white = Color(0xffffffff);
 Color grey = Color(0xB3000000);
 Color box = Color(0xffEFEFEF);
@@ -21,6 +21,12 @@ TextStyle greenTextStyle = GoogleFonts.nunito(
 );
 TextStyle greyTextStyle = GoogleFonts.nunito(
   color: grey,
+);
+TextStyle verifTextStyle = GoogleFonts.inter(
+  color: verif,
+);
+TextStyle codeTextStyle = GoogleFonts.inter(
+  color: black, 
 );
 
 
