@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:team_fourteen/ui/auth/constans.dart';
+import 'package:team_fourteen/ui/auth/register_form.dart';
 
-class LoginCustomerScreen extends StatelessWidget {
-  const LoginCustomerScreen({super.key});
+class LoginForm extends StatelessWidget {
+  const LoginForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +161,8 @@ class LoginCustomerScreen extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     print('sign up clicked');
-                    //logik regist
+                    Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const RegisterForm(),));
                   },
                   child: Text('Sign Up',
                   style: greenTextStyle.copyWith(fontSize: 12, fontWeight: FontWeight.bold),

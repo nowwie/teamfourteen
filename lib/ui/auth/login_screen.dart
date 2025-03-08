@@ -57,7 +57,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.push(context, 
-                  MaterialPageRoute(builder: (context)=> const LoginCustomerScreen()),
+                  MaterialPageRoute(builder: (context)=> const LoginForm()),
                   );
                 },
                 child: Text('Customer', style: greenTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),),
