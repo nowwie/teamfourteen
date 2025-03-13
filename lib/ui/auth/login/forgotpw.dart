@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:team_fourteen/ui/auth/constans.dart';
-import 'package:team_fourteen/ui/auth/login_form.dart';
+import 'package:team_fourteen/ui/auth/login/codepw.dart';
+import 'package:team_fourteen/ui/auth/login/login_form.dart';
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({super.key});
@@ -67,6 +68,8 @@ class ForgotPassword extends StatelessWidget {
                   ),
                   onPressed: () {
                     // Logika pengiriman kode
+                  Navigator.push(context,
+                   MaterialPageRoute(builder: (context)=> const Codepw()));
                   },
                   child: Text(
                     'Send code',

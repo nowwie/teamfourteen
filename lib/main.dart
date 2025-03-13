@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:team_fourteen/ui/auth/login_screen.dart';
+import 'package:team_fourteen/ui/auth/login/login_screen.dart';
 
 void main(){
   runApp(const MyApp());

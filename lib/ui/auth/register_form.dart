@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:team_fourteen/ui/auth/constans.dart';
-import 'package:team_fourteen/ui/auth/login_form.dart';
+import 'package:team_fourteen/ui/auth/login/login_form.dart';
 import 'package:team_fourteen/ui/auth/verification.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -12,7 +14,47 @@ class RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<RegisterForm> {
   String _selectedRole = 'User'; // Default role is User
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _fullNameController = TextEditingController();
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   TextEditingController _npwpController = TextEditingController(); // Controller for NPWP
+  bool _isLoading = false; 
+  
+  void _signUp() async {
+    setState(() {
+      _isLoading = true; // Aktifkan loading saat proses sign-up berjalan
+    });
+
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Simpan data tambahan ke Firestore
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+        'full_name': _fullNameController.text.trim(),
+        'username': _usernameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'role': _selectedRole,
+        if (_selectedRole == 'Merchant') 'npwp': _npwpController.text.trim(), // Tambahkan NPWP jika role Merchant
+        'created_at': Timestamp.now(),
+      });
+
+      // Navigasi ke halaman verifikasi setelah sign-up berhasil
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Verification()),
+      );
+    } on FirebaseAuthException catch (e) {
+      print("Sign Up Error: ${e.message}");
+    } finally {
+      setState(() {
+        _isLoading = false; // Matikan loading setelah selesai
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,41 +70,35 @@ class _RegisterFormState extends State<RegisterForm> {
               style: blackTextStyle.copyWith(fontSize: 32, fontWeight: FontWeight.w900),
             ),
             SizedBox(height: 27),
-            _buildTextField('Email', 'Email'),
+            _buildTextField('Email', 'Email', controller: _emailController),
             SizedBox(height: 12),
-            _buildTextField('Full Name', 'Full Name'),
+            _buildTextField('Full Name', 'Full Name', controller: _fullNameController),
             SizedBox(height: 12),
-            _buildTextField('Username', 'Username'),
+            _buildTextField('Username', 'Username', controller: _usernameController),
             SizedBox(height: 12),
-            _buildTextField('Password', 'Password', obscureText: true),
+            _buildTextField('Password', 'Password', obscureText: true, controller: _passwordController),
             SizedBox(height: 12),
             _buildRoleDropdown(),
-            // Menampilkan container NPWP hanya jika role adalah Admin
             if (_selectedRole == 'Merchant') _buildNpwpField(),
-            SizedBox(height: 134,),
+            SizedBox(height: 134),
             SizedBox(
-            width: MediaQuery.of(context).size.width * 0.85, // 85% dari lebar layar
-            child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-            backgroundColor: zelow,
-            minimumSize: const Size(double.infinity, 48), // Lebar penuh dalam SizedBox
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              width: MediaQuery.of(context).size.width * 0.85, // 85% dari lebar layar
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: zelow,
+                  minimumSize: const Size(double.infinity, 48), // Lebar penuh dalam SizedBox
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                ),
+                onPressed: _isLoading ? null : _signUp, // Nonaktifkan tombol saat loading
+                child: _isLoading
+                    ? CircularProgressIndicator(color: Colors.white) // Tampilkan loading jika sedang memproses
+                    : Text(
+                        'Sign Up',
+                        style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+              ),
             ),
-            onPressed: () {
-            print('Sign in clicked');
-            Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const Verification()),
-            );
-           },
-             child: Text(
-             'Sign Up',
-             style: whiteTextStyle.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
-             ),
-          ),
-         ),
-
-            SizedBox(height: 4,),
+            SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -88,8 +124,7 @@ class _RegisterFormState extends State<RegisterForm> {
     );
   }
 
-  // Fungsi untuk membangun TextField
-  Widget _buildTextField(String label, String hintText, {bool obscureText = false}) {
+  Widget _buildTextField(String label, String hintText, {bool obscureText = false, TextEditingController? controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -106,6 +141,7 @@ class _RegisterFormState extends State<RegisterForm> {
             color: box,
           ),
           child: TextField(
+            controller: controller,
             obscureText: obscureText,
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -118,7 +154,6 @@ class _RegisterFormState extends State<RegisterForm> {
     );
   }
 
-  // Fungsi untuk membangun dropdown role
   Widget _buildRoleDropdown() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +198,6 @@ class _RegisterFormState extends State<RegisterForm> {
     );
   }
 
-  // Fungsi untuk membangun field NPWP
   Widget _buildNpwpField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,5 +226,4 @@ class _RegisterFormState extends State<RegisterForm> {
       ],
     );
   }
-  
 }

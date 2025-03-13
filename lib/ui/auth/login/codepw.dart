@@ -1,91 +1,33 @@
-import 'dart:async';
-import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:team_fourteen/ui/auth/constans.dart';
-import 'package:team_fourteen/ui/home/humey.dart';
+import 'dart:async';
 
-class Verification extends StatefulWidget {
-  const Verification({super.key});
+import 'package:team_fourteen/ui/auth/login/pwchanged.dart';
+
+class Codepw extends StatefulWidget{
+  const Codepw({super.key});
 
   @override
-  _VerificationState createState() => _VerificationState();
+  _codepwState createState()=> _codepwState();
 }
 
-class _VerificationState extends State<Verification> {
+class _codepwState extends State<Codepw>{
   final int _otpLength = 5;
-  final List<TextEditingController> _otpControllers =
+  List<TextEditingController> _otpControllers =
       List.generate(5, (index) => TextEditingController());
 
   int _timerSeconds = 30;
   late Timer _timer;
   bool _canResendCode = false;
   bool _isError = false;
-  bool _isVerifying = false;
-  double _bubbleSize = 50;
-  String _email = "Loading...";
-  String _generatedOTP = "";
+  String _email = "lala****@gmail.com";
 
   @override
   void initState() {
     super.initState();
-    _getUserEmail();
-    _generateAndSendOTP();
     _startTimer();
   }
 
-  /// ✅ Mengambil email pengguna dari Firebase Authentication
-  void _getUserEmail() {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      setState(() {
-        _email = _maskEmail(user.email ?? "unknown@example.com");
-      });
-    }
-  }
-
-  /// ✅ Membuat kode OTP acak 5 digit
-  String _generateOTP() {
-    Random random = Random();
-    return List.generate(5, (_) => random.nextInt(10).toString()).join();
-  }
-
-  /// ✅ Mengaburkan sebagian email untuk tampilan
-  String _maskEmail(String email) {
-    List<String> parts = email.split('@');
-    if (parts.length == 2) {
-      String maskedPart =
-          parts[0].replaceRange(2, parts[0].length, '*' * (parts[0].length - 2));
-      return "$maskedPart@${parts[1]}";
-    }
-    return email;
-  }
-
-  /// ✅ Mengirim kode OTP ke Firestore & Firebase Auth
-  Future<void> _generateAndSendOTP() async {
-    _generatedOTP = _generateOTP();
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      // Simpan OTP ke Firestore
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(user.uid)
-          .set({"otp": _generatedOTP}, SetOptions(merge: true));
-
-      print("OTP $_generatedOTP dikirim ke ${user.email}");
-    }
-  }
-
-  /// ✅ Resend OTP
-  void _resendCode() {
-    _generateAndSendOTP();
-    _startTimer();
-    print('Mengirim ulang kode...');
-  }
-
-  /// ✅ Timer untuk pengiriman ulang kode
   void _startTimer() {
     setState(() {
       _timerSeconds = 30;
@@ -105,33 +47,26 @@ class _VerificationState extends State<Verification> {
     });
   }
 
-  /// ✅ Verifikasi OTP
-  Future<void> _verifyCode() async {
+  void _resendCode() {
+    setState(() {
+      _startTimer();
+    });
+    print('Resending Code...');
+  }
+
+  void _verifyCode() {
     String otpCode =
         _otpControllers.map((controller) => controller.text).join();
-    User? user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(user.uid)
-          .get();
-
-      if (snapshot.exists && snapshot.get("otp") == otpCode) {
-        setState(() {
-          _isError = false;
-          _isVerifying = true;
-          _bubbleSize = 150;
-        });
-        Future.delayed(const Duration(seconds: 2), () {
-          //navigator home),
-          
-        });
-      } else {
-        setState(() {
-          _isError = true;
-        });
-      }
+    if (otpCode != "12345") {
+      setState(() {
+        _isError = true;
+      });
+    } else {
+      setState(() {
+        _isError = false;
+      });
+      Navigator.pushReplacement(context,
+       MaterialPageRoute(builder: (context)=> const PasswordChanged()));
     }
   }
 
@@ -177,7 +112,7 @@ class _VerificationState extends State<Verification> {
                 style: blackTextStyle.copyWith(fontSize: 14),
                 children: [
                   const TextSpan(
-                      text: 'We’ve sent an Email with an activation code \nto '),
+                      text: 'We’ve sent an Email with an activation code to '),
                   TextSpan(
                     text: _email,
                     style: blackTextStyle.copyWith(fontWeight: FontWeight.bold),
@@ -210,9 +145,19 @@ class _VerificationState extends State<Verification> {
                       counterText: '',
                       border: InputBorder.none,
                     ),
+                    onChanged: (value) {
+                      if (value.isNotEmpty && index < _otpLength - 1) {
+                        FocusScope.of(context).nextFocus();
+                      } else if (value.isEmpty && index > 0) {
+                        FocusScope.of(context).previousFocus();
+                      }
+                    },
                   ),
                 );
               }),
+            ),
+            const SizedBox(
+              height: 24,
             ),
             if (_isError)
               Padding(
@@ -225,28 +170,53 @@ class _VerificationState extends State<Verification> {
               ),
             const SizedBox(height: 249),
             if (!_canResendCode)
-              Text(
-                '00:${_timerSeconds.toString().padLeft(2, '0')}',
-                style: blackTextStyle.copyWith(fontSize: 14),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Didn’t receive a code? ',
+                  style: blackTextStyle.copyWith(fontSize: 14),
+                ),
+                Text(
+                  '00:${_timerSeconds.toString().padLeft(2, '0')}',
+                  style: blackTextStyle.copyWith(fontSize: 14),
+                ),
+              ],
+            ),
+          if (_canResendCode)
+            GestureDetector(
+              onTap: _resendCode,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  style: blackTextStyle.copyWith(fontSize: 14),
+                  children: [
+                    const TextSpan(text: 'Didn’t receive a code? '),
+                    TextSpan(
+                      text: 'Resend',
+                      style: blackTextStyle.copyWith(
+                          fontWeight: FontWeight.bold, color: black),
+                    ),
+                  ],
+                ),
               ),
-            if (_canResendCode)
-              GestureDetector(
-                onTap: _resendCode,
-                child: Text('Resend', style: TextStyle(fontWeight: FontWeight.bold)),
-              ),
+            ),
+
             const SizedBox(height: 24),
-            if (_isVerifying)
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                width: _bubbleSize,
-                height: _bubbleSize,
-                decoration: BoxDecoration(color: zelow, shape: BoxShape.circle),
+            ElevatedButton(
+              onPressed: _verifyCode,
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: zelow,
+                  minimumSize: const Size(double.infinity, 44),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  )),
+              child: Text(
+                'Submit',
+                style: whiteTextStyle.copyWith(
+                    fontSize: 16, fontWeight: FontWeight.bold),
               ),
-            if (!_isVerifying)
-              ElevatedButton(
-                onPressed: _verifyCode,
-                child: Text('Submit', style: whiteTextStyle),
-              ),
+            ),
           ],
         ),
       ),

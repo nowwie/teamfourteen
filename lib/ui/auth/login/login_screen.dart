@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:team_fourteen/ui/auth/constans.dart';
-import 'package:team_fourteen/ui/auth/login_form.dart';
+import 'package:team_fourteen/ui/auth/login/login_form.dart';
 import 'package:team_fourteen/ui/auth/register_form.dart';
 
 class LoginScreen extends StatelessWidget {
