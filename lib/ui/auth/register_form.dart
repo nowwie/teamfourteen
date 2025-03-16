@@ -43,7 +43,7 @@ class _RegisterFormState extends State<RegisterForm> {
       });
 
       // Navigasi ke halaman verifikasi setelah sign-up berhasil
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const Verification()),
       );
